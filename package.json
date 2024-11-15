@@ -1,0 +1,48 @@
+{
+  "name": "create-project-structure",
+  "version": "1.0.0",
+  "description": "A project structure generator for React and Next.js applications",
+  "type": "module",
+  "bin": {
+    "create-structure": "./bin/cli.js"
+  },
+  "scripts": {
+    "test": "vitest",
+    "dev": "node bin/cli.js react",
+    "dev:next": "node bin/cli.js next",
+    "start": "node bin/cli.js",
+    "build": "rm -rf dist && mkdir dist && cp -r src bin package.json README.md dist/",
+    "prepublishOnly": "npm run test"
+  },
+  "keywords": [
+    "react",
+    "nextjs",
+    "project-structure",
+    "scaffold",
+    "generator",
+    "create-react-app",
+    "create-next-app"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0",
+    "inquirer": "^9.2.12",
+    "ora": "^7.0.1"
+  },
+  "devDependencies": {
+    "vitest": "^0.34.6"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/create-project-structure.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/create-project-structure/issues"
+  },
+  "homepage": "https://github.com/yourusername/create-project-structure#readme"
+}
