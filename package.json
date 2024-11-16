@@ -1,5 +1,5 @@
 {
-  "name": "project-creator",
+  "name": "project-structure-creator",
   "version": "1.0.0",
   "description": "A project structure generator for React and Next.js applications",
   "type": "module",
@@ -8,6 +8,7 @@
   },
   "files": [
     "bin/",
+    "generator.js",
     "README.md"
   ],
   "scripts": {
