@@ -4,14 +4,18 @@
   "description": "A project structure generator for React and Next.js applications",
   "type": "module",
   "bin": {
-    "create-structure": "./bin/cli.js"
+    "create-project": "./bin/cli.js"
   },
+  "files": [
+    "bin/",
+    "README.md"
+  ],
   "scripts": {
     "test": "vitest",
-    "dev": "node bin/cli.js react",
+    "dev": "node bin/cli.js",
+    "dev:react": "node bin/cli.js",
     "dev:next": "node bin/cli.js next",
     "start": "node bin/cli.js",
-    "build": "rm -rf dist && mkdir dist && cp -r src bin package.json README.md dist/",
     "prepublishOnly": "npm run test"
   },
   "keywords": [
@@ -21,9 +25,11 @@
     "scaffold",
     "generator",
     "create-react-app",
-    "create-next-app"
+    "create-next-app",
+    "project-template",
+    "boilerplate"
   ],
-  "author": "",
+  "author": "Meet5555",
   "license": "MIT",
   "dependencies": {
     "chalk": "^5.3.0",
@@ -44,5 +50,8 @@
   "bugs": {
     "url": "https://github.com/Meet5555/project-creator/issues"
   },
-  "homepage": "https://github.com/Meet5555/project-creator#readme"
+  "homepage": "https://github.com/Meet5555/project-creator#readme",
+  "publishConfig": {
+    "access": "public"
+  }
 }
