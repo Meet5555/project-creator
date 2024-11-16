@@ -84,4 +84,4 @@ During setup, you can choose to include:
 
 ## License
 
-MEET
+MIT

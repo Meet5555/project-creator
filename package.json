@@ -1,5 +1,5 @@
 {
-  "name": "create-project-structure",
+  "name": "project-creator",
   "version": "1.0.0",
   "description": "A project structure generator for React and Next.js applications",
   "type": "module",
@@ -39,10 +39,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourusername/create-project-structure.git"
+    "url": "git+https://github.com/Meet5555/project-creator.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/create-project-structure/issues"
+    "url": "https://github.com/Meet5555/project-creator/issues"
   },
-  "homepage": "https://github.com/yourusername/create-project-structure#readme"
+  "homepage": "https://github.com/Meet5555/project-creator#readme"
 }
