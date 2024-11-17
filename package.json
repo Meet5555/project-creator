@@ -3,23 +3,29 @@
   "version": "1.0.0",
   "description": "A project structure generator for React and Next.js applications",
   "type": "module",
+  "main": "./dist/src/generator.js",
+  "types": "./dist/src/generator.d.ts",
   "bin": {
-    "create-project": "./bin/cli.js"
+    "create-project": "./dist/bin/cli.js"
   },
   "files": [
-    "bin/",
-    "generator.js",
+    "dist/",
     "README.md"
   ],
   "scripts": {
-    "dev": "node bin/cli.js",
-    "dev:react": "node bin/cli.js",
-    "dev:next": "node bin/cli.js next",
-    "start": "node bin/cli.js",
+    "dev": "tsx bin/cli.ts",
+    "dev:react": "tsx bin/cli.ts react",
+    "dev:next": "tsx bin/cli.ts next",
+    "start": "tsx bin/cli.ts",
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc --noEmit && tsc --build",
     "clean-check": "git diff-index --quiet HEAD || (echo 'Git working directory not clean.' && exit 1)",
+    "prepublish": "npm run build",
+    "postpublish": "git push --tags",
     "publish:patch": "npm run clean-check && npm version patch && npm publish",
     "publish:minor": "npm run clean-check && npm version minor && npm publish",
-    "publish:major": "npm run clean-check && npm version major && npm publish"
+    "publish:major": "npm run clean-check && npm version major && npm publish",
+    "release": "npm run clean-check && npm run prepublish && npm version patch && npm publish"
   },
   "keywords": [
     "react",
@@ -39,6 +45,18 @@
     "commander": "^11.1.0",
     "inquirer": "^9.2.12",
     "ora": "^7.0.1"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.10.4",
+    "@typescript-eslint/eslint-plugin": "^8.14.0",
+    "@typescript-eslint/parser": "^8.14.0",
+    "eslint": "^9.15.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "prettier": "^3.3.3",
+    "tsx": "^4.6.2",
+    "typescript": "^5.3.3"
   },
   "repository": {
     "type": "git",

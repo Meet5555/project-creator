@@ -5,16 +5,17 @@ import inquirer from 'inquirer';
 import { generateStructure } from '../generator.js';
 import chalk from 'chalk';
 
-const ALLOWED_FRAMEWORKS = ['react', 'next'];
+const ALLOWED_FRAMEWORKS = ['react', 'next'] as const;
+type Framework = typeof ALLOWED_FRAMEWORKS[number];
 
 program
   .name('create-project')
   .description('Generate project structure for React or Next.js applications')
   .argument('[framework]', 'Framework to generate structure for (react/next)')
-  .action(async (framework) => {
+  .action(async (framework?: string) => {
     try {
-      if (!framework || !ALLOWED_FRAMEWORKS.includes(framework.toLowerCase())) {
-        const frameworkAnswer = await inquirer.prompt([
+      if (!framework || !ALLOWED_FRAMEWORKS.includes(framework.toLowerCase() as Framework)) {
+        const frameworkAnswer = await inquirer.prompt<{ framework: Framework }>([
           {
             type: 'list',
             name: 'framework',
@@ -28,7 +29,11 @@ program
         framework = frameworkAnswer.framework;
       }
 
-      const answers = await inquirer.prompt([
+      const answers = await inquirer.prompt<{
+        typescript: boolean;
+        eslint: boolean;
+        prettier: boolean;
+      }>([
         {
           type: 'confirm',
           name: 'typescript',
@@ -49,11 +54,11 @@ program
         },
       ]);
 
-      await generateStructure(framework.toLowerCase(), answers);
+      await generateStructure(framework.toLowerCase() as Framework, answers);
     } catch (error) {
       console.error(
         chalk.red('\n❌ Error generating project structure:'),
-        error
+        error instanceof Error ? error.message : error
       );
       process.exit(1);
     }

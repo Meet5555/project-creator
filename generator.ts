@@ -7,23 +7,39 @@ import inquirer from 'inquirer';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-async function getReactVersions() {
+interface ProjectOptions {
+  typescript: boolean;
+  eslint: boolean;
+  prettier: boolean;
+}
+
+interface ProjectAnswers {
+  projectName: string;
+  version: string;
+  customVersion?: string;
+  routerType?: string;
+}
+
+async function getReactVersions(): Promise<string[]> {
   const output = execSync('npm view react versions --json').toString();
-  const versions = JSON.parse(output);
+  const versions = JSON.parse(output) as string[];
   return versions.filter(
     (v) => !v.includes('alpha') && !v.includes('beta') && !v.includes('rc')
   );
 }
 
-async function getNextVersions() {
+async function getNextVersions(): Promise<string[]> {
   const output = execSync('npm view next versions --json').toString();
-  const versions = JSON.parse(output);
+  const versions = JSON.parse(output) as string[];
   return versions.filter(
     (v) => !v.includes('alpha') && !v.includes('beta') && !v.includes('rc')
   );
 }
 
-export async function generateStructure(framework, options) {
+export async function generateStructure(
+  framework: 'react' | 'next',
+  options: ProjectOptions
+): Promise<void> {
   try {
     // Get available versions
     const versions =
@@ -32,16 +48,16 @@ export async function generateStructure(framework, options) {
         : await getNextVersions();
 
     const latestVersion = versions[versions.length - 1];
-    const commonVersions = versions.slice(-5).reverse(); // Get last 5 versions
+    const commonVersions = versions.slice(-5).reverse();
 
     // Prompt for project details
-    const answers = await inquirer.prompt([
+    const answers = await inquirer.prompt<ProjectAnswers>([
       {
         type: 'input',
         name: 'projectName',
         message: 'What is your project name?',
         default: 'my-app',
-        validate: (input) => {
+        validate: (input: string) => {
           if (/^[a-z0-9-_]+$/i.test(input)) return true;
           return 'Project name may only include letters, numbers, underscores and hashes';
         },
@@ -61,15 +77,23 @@ export async function generateStructure(framework, options) {
         name: 'customVersion',
         message: 'Enter version number:',
         when: (answers) => answers.version === 'custom',
-        validate: (input) => {
+        validate: (input: string) => {
           if (/^\d+\.\d+\.\d+$/.test(input)) return true;
           return 'Please enter a valid version number (e.g., 18.2.0)';
         },
+      },
+      {
+        type: 'list',
+        name: 'routerType',
+        message: 'Which routing strategy do you want to use?',
+        choices: ['App Router (New)', 'Page Router (Legacy)'],
+        when: (answers) => framework === 'next', // Only ask for Next.js projects
       },
     ]);
 
     const selectedVersion = answers.customVersion || answers.version;
     const projectName = answers.projectName;
+    const routerType = answers.routerType;
 
     const spinner = ora('Creating new project...').start();
 
@@ -95,10 +119,13 @@ export async function generateStructure(framework, options) {
           JSON.stringify(packageJson, null, 2)
         );
       } else {
-        execSync(
-          `npx create-next-app@${selectedVersion} ${projectName} --ts=${options.typescript} --tailwind --eslint --app --src-dir`,
-          { stdio: 'inherit' }
-        );
+        const nextCreateCmd = `npx create-next-app@${selectedVersion} ${projectName} ${options.typescript && '--ts'} ${options.eslint && '--eslint'}`;
+
+        if (routerType === 'App Router (New)') {
+          execSync(`${nextCreateCmd} --app`, { stdio: 'inherit' });
+        } else {
+          execSync(`${nextCreateCmd} --pages`, { stdio: 'inherit' });
+        }
       }
 
       // Change to project directory
@@ -223,12 +250,15 @@ export async function generateStructure(framework, options) {
       throw error;
     }
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error:', error instanceof Error ? error.message : error);
     process.exit(1);
   }
 }
 
-async function generateBoilerplate(framework, isTypescript) {
+async function generateBoilerplate(
+  framework: 'react' | 'next',
+  isTypescript: boolean
+): Promise<void> {
   const ext = isTypescript ? 'tsx' : 'jsx';
 
   // Sample component
