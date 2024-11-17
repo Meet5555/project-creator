@@ -1,11 +1,8 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import ora from 'ora';
 import { execSync } from 'child_process';
 import inquirer from 'inquirer';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 interface ProjectOptions {
   typescript: boolean;
@@ -17,7 +14,6 @@ interface ProjectAnswers {
   projectName: string;
   version: string;
   customVersion?: string;
-  routerType?: string;
 }
 
 async function getReactVersions(): Promise<string[]> {
@@ -82,18 +78,10 @@ export async function generateStructure(
           return 'Please enter a valid version number (e.g., 18.2.0)';
         },
       },
-      {
-        type: 'list',
-        name: 'routerType',
-        message: 'Which routing strategy do you want to use?',
-        choices: ['App Router (New)', 'Page Router (Legacy)'],
-        when: (answers) => framework === 'next', // Only ask for Next.js projects
-      },
     ]);
 
     const selectedVersion = answers.customVersion || answers.version;
     const projectName = answers.projectName;
-    const routerType = answers.routerType;
 
     const spinner = ora('Creating new project...').start();
 
@@ -121,11 +109,7 @@ export async function generateStructure(
       } else {
         const nextCreateCmd = `npx create-next-app@${selectedVersion} ${projectName} ${options.typescript && '--ts'} ${options.eslint && '--eslint'}`;
 
-        if (routerType === 'App Router (New)') {
-          execSync(`${nextCreateCmd} --app`, { stdio: 'inherit' });
-        } else {
-          execSync(`${nextCreateCmd} --pages`, { stdio: 'inherit' });
-        }
+        execSync(`${nextCreateCmd}`, { stdio: 'inherit' });
       }
 
       // Change to project directory

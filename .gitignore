@@ -7,4 +7,4 @@ dist/
 !.env.example
 
 project-structure-creator.txt
-PUBLISH.md
+PUBLISHING_STEPS.md
