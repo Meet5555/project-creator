@@ -12,12 +12,14 @@
     "README.md"
   ],
   "scripts": {
-    "test": "vitest",
     "dev": "node bin/cli.js",
     "dev:react": "node bin/cli.js",
     "dev:next": "node bin/cli.js next",
     "start": "node bin/cli.js",
-    "prepublishOnly": "npm run test"
+    "clean-check": "git diff-index --quiet HEAD || (echo 'Git working directory not clean.' && exit 1)",
+    "publish:patch": "npm run clean-check && npm version patch && npm publish",
+    "publish:minor": "npm run clean-check && npm version minor && npm publish",
+    "publish:major": "npm run clean-check && npm version major && npm publish"
   },
   "keywords": [
     "react",
@@ -38,20 +40,14 @@
     "inquirer": "^9.2.12",
     "ora": "^7.0.1"
   },
-  "devDependencies": {
-    "vitest": "^0.34.6"
-  },
-  "engines": {
-    "node": ">=14.0.0"
-  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Meet5555/project-creator.git"
+    "url": "https://github.com/Meet5555/project-structure-creator.git"
   },
   "bugs": {
-    "url": "https://github.com/Meet5555/project-creator/issues"
+    "url": "https://github.com/Meet5555/project-structure-creator.git/issues"
   },
-  "homepage": "https://github.com/Meet5555/project-creator#readme",
+  "homepage": "https://github.com/Meet5555/project-structure-creator#readme",
   "publishConfig": {
     "access": "public"
   }
