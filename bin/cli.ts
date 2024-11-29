@@ -6,7 +6,7 @@ import { generateStructure } from '../generator.js';
 import chalk from 'chalk';
 
 const ALLOWED_FRAMEWORKS = ['react', 'next'] as const;
-type Framework = typeof ALLOWED_FRAMEWORKS[number];
+type Framework = (typeof ALLOWED_FRAMEWORKS)[number];
 
 program
   .name('create-project')
@@ -14,18 +14,23 @@ program
   .argument('[framework]', 'Framework to generate structure for (react/next)')
   .action(async (framework?: string) => {
     try {
-      if (!framework || !ALLOWED_FRAMEWORKS.includes(framework.toLowerCase() as Framework)) {
-        const frameworkAnswer = await inquirer.prompt<{ framework: Framework }>([
-          {
-            type: 'list',
-            name: 'framework',
-            message: 'Which framework would you like to use?',
-            choices: ALLOWED_FRAMEWORKS.map((f) => ({
-              name: f.charAt(0).toUpperCase() + f.slice(1),
-              value: f,
-            })),
-          },
-        ]);
+      if (
+        !framework ||
+        !ALLOWED_FRAMEWORKS.includes(framework.toLowerCase() as Framework)
+      ) {
+        const frameworkAnswer = await inquirer.prompt<{ framework: Framework }>(
+          [
+            {
+              type: 'list',
+              name: 'framework',
+              message: 'Which framework would you like to use?',
+              choices: ALLOWED_FRAMEWORKS.map((f) => ({
+                name: f.charAt(0).toUpperCase() + f.slice(1),
+                value: f,
+              })),
+            },
+          ]
+        );
         framework = frameworkAnswer.framework;
       }
 

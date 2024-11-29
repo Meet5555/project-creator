@@ -20,7 +20,7 @@
     "clean": "rm -rf dist",
     "build": "npm run clean && tsc --noEmit && tsc --build",
     "clean-check": "git diff-index --quiet HEAD || (echo 'Git working directory not clean.' && exit 1)",
-    "prepublish": "npm run build",
+    "prepublishOnly": "npm run build",
     "postpublish": "git push --tags",
     "publish:patch": "npm run clean-check && npm version patch && npm publish",
     "publish:minor": "npm run clean-check && npm version minor && npm publish",

@@ -78,6 +78,17 @@ export async function generateStructure(
           return 'Please enter a valid version number (e.g., 18.2.0)';
         },
       },
+      // {
+      //   type: 'list',
+      //   name: 'useSrc',
+      //   message: 'Would you like to use the src directory?',
+      //   when: () => framework === 'next',
+      //   choices: [
+      //     { name: 'Yes', value: true },
+      //     { name: 'No', value: false },
+      //   ],
+      //   default: true,
+      // },
     ]);
 
     const selectedVersion = answers.customVersion || answers.version;
@@ -89,10 +100,10 @@ export async function generateStructure(
       // Create new project using create-vite or create-next-app
       if (framework === 'react') {
         execSync(
-          `npm create vite@latest ${projectName} -- --template ${
-            options.typescript ? 'react-ts' : 'react'
-          }`,
-          { stdio: 'inherit' }
+          `npm create vite@latest ${projectName} -- --template ${options.typescript ? 'react-ts' : 'react'}`,
+          {
+            stdio: 'inherit',
+          }
         );
 
         // Update React version in package.json
@@ -253,9 +264,7 @@ ${isTypescript ? '  label: string;' : ''}
 ${isTypescript ? '  onClick?: () => void;' : ''}
 ${isTypescript ? '}' : ''}
 
-export const Button${
-    isTypescript ? ': React.FC<ButtonProps>' : ''
-  } = ({ label, onClick }) => {
+export const Button${isTypescript ? ': React.FC<ButtonProps>' : ''} = ({ label, onClick }) => {
   return (
     <button
       className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -267,16 +276,10 @@ export const Button${
 };`;
 
   // Sample hook
-  const hookContent = `${
-    isTypescript ? "import { useState, useEffect } from 'react';" : ''
-  }
+  const hookContent = `${isTypescript ? "import { useState, useEffect } from 'react';" : ''}
 
-export const useLocalStorage${
-    isTypescript ? '<T>' : ''
-  } = (key: string, initialValue${isTypescript ? ': T' : ''}) => {
-  const [storedValue, setStoredValue] = useState${
-    isTypescript ? '<T>' : ''
-  }(() => {
+export const useLocalStorage${isTypescript ? '<T>' : ''} = (key: string, initialValue${isTypescript ? ': T' : ''}) => {
+  const [storedValue, setStoredValue] = useState${isTypescript ? '<T>' : ''}(() => {
     try {
       const item = window.localStorage.getItem(key);
       return item ? JSON.parse(item) : initialValue;
